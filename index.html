@@ -12,9 +12,13 @@
         p.subtitle { color: #94a3b8; text-align: center; margin-bottom: 24px; font-size: 14px; }
         .form-group { margin-bottom: 16px; }
         label { display: block; margin-bottom: 6px; color: #cbd5e1; font-size: 14px; }
-        input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 14px; outline: none; }
-        input:focus, select:focus { border-color: #f59e0b; }
-        button { width: 100%; padding: 14px; background: #f59e0b; color: #0f172a; font-weight: bold; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        input[type="text"], input[type="email"] { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 14px; outline: none; }
+        input[type="text"]:focus, input[type="email"]:focus { border-color: #f59e0b; }
+        .pdpa-group { display: flex; align-items: flex-start; gap: 10px; margin-top: 16px; margin-bottom: 20px; }
+        .pdpa-group input[type="checkbox"] { width: 18px; height: 18px; accent-color: #f59e0b; cursor: pointer; margin-top: 2px; }
+        .pdpa-group label { font-size: 13px; color: #94a3b8; line-height: 1.4; cursor: pointer; margin-bottom: 0; }
+        .pdpa-group a { color: #f59e0b; text-decoration: underline; }
+        button { width: 100%; padding: 14px; background: #f59e0b; color: #0f172a; font-weight: bold; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.2s; }
         button:hover { background: #d97706; }
         #statusMessage { margin-top: 16px; text-align: center; font-size: 14px; display: none; padding: 10px; border-radius: 6px; }
         .success { background: #065f46; color: #34d399; }
@@ -36,14 +40,15 @@
             <label for="email">อีเมล</label>
             <input type="email" id="email" placeholder="example@email.com" required>
         </div>
-        <div class="form-group">
-            <label for="tier">สิทธิ์ Legend Pass</label>
-            <select id="tier">
-                <option value="Standard Pass">Standard Pass</option>
-                <option value="VIP Pass">VIP Pass</option>
-                <option value="Ultimate Pass">Ultimate Pass</option>
-            </select>
+        
+        <!-- ส่วนยอมรับนโยบาย PDPA -->
+        <div class="pdpa-group">
+            <input type="checkbox" id="pdpa" required>
+            <label for="pdpa">
+                ฉันได้อ่านและยอมรับ <a href="#" onclick="alert('ข้อกำหนดและนโยบายความเป็นส่วนตัว: ข้อมูลของคุณจะถูกใช้เพื่อสิทธิ์การเข้าร่วมแคมเปญ Legend Pass เท่านั้น'); return false;">นโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)</a>
+            </label>
         </div>
+
         <button type="submit" id="submitBtn">ยืนยันการรับ Pass</button>
     </form>
 
@@ -57,7 +62,6 @@
 
     // Firebase Configuration
     const firebaseConfig = {
-        apiKey: "AIzaSyD-EXAMPLE_KEY_HERE", 
         authDomain: "thailand-legends-never-d-f4131.firebaseapp.com",
         projectId: "thailand-legends-never-d-f4131",
         storageBucket: "thailand-legends-never-d-f4131.appspot.com",
@@ -83,14 +87,14 @@
 
         const fullname = document.getElementById('fullname').value;
         const email = document.getElementById('email').value;
-        const tier = document.getElementById('tier').value;
+        const pdpaAccepted = document.getElementById('pdpa').checked;
 
         try {
             // บันทึกลง Collection ชื่อ "participants"
             await addDoc(collection(db, "participants"), {
                 fullname: fullname,
                 email: email,
-                passTier: tier,
+                pdpaAccepted: pdpaAccepted, // บันทึกสถานะการยอมรับ PDPA (true)
                 createdAt: serverTimestamp()
             });
 
