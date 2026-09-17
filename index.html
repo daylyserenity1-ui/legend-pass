@@ -1,186 +1,116 @@
-<!doctype html>
-<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Thailand Legends Never Die - Legend Pass v2</title>
-<style>
-*{box-sizing:border-box}body{margin:0;background:#090807;color:#f7f0df;font-family:Arial,sans-serif}header{padding:20px;text-align:center;background:#0b0907;border-bottom:1px solid #4b3920;position:sticky;top:0}.brand{font:24px Georgia;color:#f2cf75;letter-spacing:2px}.sub{font-size:11px;color:#b8ad98;letter-spacing:3px;margin-top:6px}nav{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-top:14px}button{border:1px solid #5b4523;border-radius:10px;padding:11px 14px;background:#e2b34f;color:#1a1208;font-weight:bold;cursor:pointer}button.secondary{background:#21180f;color:#f2cf75}main{max-width:760px;margin:auto;padding:22px 15px 50px}.screen{display:none}.screen.active{display:block}.hero{text-align:center;padding:30px 0}.hero h1{font:40px Georgia;color:#f2cf75}.muted{color:#b8ad98}.card{background:#15100b;border:1px solid #4b3920;border-radius:18px;padding:19px;margin:14px 0}h2{color:#f2cf75;font-family:Georgia}label{display:block;color:#b8ad98;font-size:13px;margin:12px 0 6px}input,select{width:100%;padding:12px;background:#0d0b09;border:1px solid #5b4523;border-radius:9px;color:white;font-size:15px}.pass{text-align:center;padding:22px;border-radius:17px;background:linear-gradient(145deg,#1c1309,#3a250c);border:1px solid #d9a441}.code{font-size:30px;letter-spacing:4px;color:#f2cf75;font-weight:900}.big{font-size:42px;color:#f2cf75;font-weight:900}.activity{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0;border-top:1px solid #3a2b1a}.activity:first-child{border-top:0}.activity small{display:block;color:#b8ad98;margin-top:4px}.status{padding:6px 9px;border-radius:999px;font-size:12px;white-space:nowrap}.done{background:#143321;color:#7be3a8}.todo{background:#2c2113;color:#f2cf75}.notice{margin-top:12px;padding:11px;border:1px solid #4b3920;border-radius:9px;color:#b8ad98;background:#20160d}.success{color:#7be3a8}.warning{color:#f2cf75}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;border-bottom:1px solid #382b1c;text-align:left}th{color:#f2cf75}.winner{text-align:center;min-height:170px;padding-top:35px}.winnername{font:35px Georgia;color:#f2cf75}.prize{font-size:19px;margin-top:8px}footer{text-align:center;color:#766b5b;font-size:11px;padding:20px}@media(max-width:560px){.hero h1{font-size:32px}.activity{align-items:flex-start}.brand{font-size:19px}}
-.pdpa-box{display:flex;align-items:flex-start;gap:10px;margin:16px 0 20px;font-size:13px;color:#b8ad98;text-align:left}.pdpa-box input[type="checkbox"]{width:auto;margin-top:3px;accent-color:#e2b34f;cursor:pointer}.pdpa-box a{color:#f2cf75;text-decoration:underline}
-.btn-danger{background:#5a1818;color:#ff8080;border:1px solid #a33232;padding:5px 10px;font-size:12px;border-radius:6px}
-</style></head><body>
-<header><div class="brand">THAILAND LEGENDS NEVER DIE</div><div class="sub">LEGEND PASS • LUCKY DRAW • VERSION 2</div>
-<nav><button class="secondary" onclick="show('home')">Home</button><button class="secondary" onclick="show('pass')">My Pass</button><button class="secondary" onclick="show('activities')">Activities</button><button class="secondary" onclick="show('staff')">Staff Verify</button><button class="secondary" onclick="show('admin')">Admin</button></nav></header>
-<main>
-<section id="home" class="screen active"><div class="hero">🇹🇭<h1>SCAN • JOIN • WIN</h1><p class="muted">Legend Pass สำหรับสะสมสิทธิ์ Lucky Draw</p></div>
-<div class="card"><h2>Get Your Legend Pass</h2>
-<form id="passForm" onsubmit="event.preventDefault(); register();">
-  <label>ชื่อ–นามสกุล</label>
-  <input id="name" placeholder="เช่น สมชาย ใจดี">
-  
-  <label>เบอร์โทรศัพท์</label>
-  <input id="phone" type="tel" maxlength="10" placeholder="08xxxxxxxx">
-  
-  <label>E-mail</label>
-  <input id="email" type="email" placeholder="example@email.com">
-  
-  <div class="pdpa-box">
-    <input type="checkbox" id="pdpaConsent">
-    <label for="pdpaConsent" style="display:inline;margin:0;cursor:pointer;">ฉันยินยอมให้เก็บและใช้ข้อมูลส่วนบุคคลเพื่อการร่วมกิจกรรม Lucky Draw ตาม <a href="#" onclick="alert('ข้อกำหนด: ข้อมูลจะใช้เพื่อการยืนยันตัวตนและการรับรางวัลเท่านั้น');return false;">นโยบายความเป็นส่วนตัว (PDPA)</a></label>
-  </div>
-  
-  <button type="submit" style="width:100%;margin-top:10px;">CREATE MY PASS</button>
-</form>
-<div id="regMsg"></div></div></section>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legend Pass - Thailand Legends Never Die</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .card { background: #1e293b; border-radius: 16px; padding: 32px; width: 100%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #334155; }
+        h1 { color: #f59e0b; text-align: center; margin-bottom: 8px; font-size: 24px; }
+        p.subtitle { color: #94a3b8; text-align: center; margin-bottom: 24px; font-size: 14px; }
+        .form-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 6px; color: #cbd5e1; font-size: 14px; }
+        input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 14px; outline: none; }
+        input:focus, select:focus { border-color: #f59e0b; }
+        button { width: 100%; padding: 14px; background: #f59e0b; color: #0f172a; font-weight: bold; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        button:hover { background: #d97706; }
+        #statusMessage { margin-top: 16px; text-align: center; font-size: 14px; display: none; padding: 10px; border-radius: 6px; }
+        .success { background: #065f46; color: #34d399; }
+        .error { background: #991b1b; color: #fca5a5; }
+    </style>
+</head>
+<body>
 
-<section id="pass" class="screen"><div class="card"><h2>My Legend Pass</h2><div id="passContent"></div></div></section>
+<div class="card">
+    <h1>LEGEND PASS</h1>
+    <p class="subtitle">ลงทะเบียนรับสิทธิ์เข้าร่วมแคมเปญ</p>
+    
+    <form id="passForm">
+        <div class="form-group">
+            <label for="fullname">ชื่อ-นามสกุล</label>
+            <input type="text" id="fullname" placeholder="กรอกชื่อ-นามสกุล" required>
+        </div>
+        <div class="form-group">
+            <label for="email">อีเมล</label>
+            <input type="email" id="email" placeholder="example@email.com" required>
+        </div>
+        <div class="form-group">
+            <label for="tier">สิทธิ์ Legend Pass</label>
+            <select id="tier">
+                <option value="Standard Pass">Standard Pass</option>
+                <option value="VIP Pass">VIP Pass</option>
+                <option value="Ultimate Pass">Ultimate Pass</option>
+            </select>
+        </div>
+        <button type="submit" id="submitBtn">ยืนยันการรับ Pass</button>
+    </form>
 
-<section id="activities" class="screen"><div class="card"><h2>Legend Quest</h2><p class="muted">ไม่มีปุ่ม Claim โดยตรงแล้ว ปุ่มด้านล่างเป็น “จำลอง Scan” เพื่อทดสอบระบบเท่านั้น</p><div id="activityList"></div></div></section>
-
-<section id="staff" class="screen"><div class="card"><h2>Staff Verification</h2>
-<div id="staffLoginBox"><p class="muted">กรุณาใส่รหัสผ่าน Staff เพื่อเข้าใช้งาน</p><label>รหัสผ่าน</label><input id="staffPassword" type="password" placeholder="รหัสผ่าน Staff" onkeydown="if(event.key==='Enter')staffLogin()"><button onclick="staffLogin()">เข้าสู่ระบบ</button><div id="staffLoginMsg"></div></div>
-<div id="staffContent" style="display:none"><div style="display:flex;justify-content:flex-end;margin-bottom:6px"><button class="secondary" onclick="staffLogout()">ออกจากระบบ</button></div><p class="muted">เจ้าหน้าที่ใช้หน้านี้เพื่อยืนยันกิจกรรมก่อนเพิ่ม Entry</p><label>Legend Pass</label><input id="staffPass" placeholder="LP-0001"><label>กิจกรรม</label><select id="staffActivity"></select><button onclick="verifyStaff()">VERIFY & ADD ENTRY</button><div id="staffMsg"></div></div>
-</div></section>
-
-<section id="admin" class="screen"><div class="card"><h2>Admin Dashboard</h2>
-<div id="adminLoginBox"><p class="muted">กรุณาใส่รหัสผ่าน Admin เพื่อเข้าใช้งาน</p><label>รหัสผ่าน</label><input id="adminPassword" type="password" placeholder="รหัสผ่าน Admin" onkeydown="if(event.key==='Enter')adminLogin()"><button onclick="adminLogin()">เข้าสู่ระบบ</button><div id="adminLoginMsg"></div></div>
-<div id="adminContent" style="display:none">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-    <button class="btn-danger" onclick="resetAllData()">🗑️ รีเซ็ตข้อมูลทั้งหมด</button>
-    <button class="secondary" onclick="adminLogout()">ออกจากระบบ</button>
-  </div>
-  <div class="notice">Prototype นี้เก็บข้อมูลใน Browser เท่านั้น ยังไม่ใช่ฐานข้อมูลออนไลน์</div>
-  <p>Registered: <b id="countGuests">0</b> | Total Entries: <b id="countEntries">0</b></p>
-  <h2>Participants</h2>
-  <div style="overflow:auto">
-    <table>
-      <thead>
-        <tr><th>Pass</th><th>Name</th><th>Entries</th><th>Action</th></tr>
-      </thead>
-      <tbody id="guestTable"></tbody>
-    </table>
-  </div>
-  <label style="margin-top:20px;">รางวัล</label>
-  <input id="prize" value="Digital Camera">
-  <button onclick="drawWinner()" style="margin-top:10px;">START LUCKY DRAW</button>
-  <div class="card winner" id="winner"><span class="muted">Winner will appear here</span></div>
+    <div id="statusMessage"></div>
 </div>
-</div></section>
-</main><footer>Prototype v2 • QR flow + Staff/Admin Login + Duplicate Entry Protection</footer>
 
-<script>
-const activities=[['mixologist','🍸 Mixologist Competition'],['barfair','🍹 Barfair Competition'],['tourism','🇹🇭 Tourism Quiz'],['photo','📸 Photo Challenge'],['special','⭐ Special Activity']];
-let db=JSON.parse(localStorage.getItem('tlnd_v2')||'{"guests":[]}'),current=localStorage.getItem('tlnd_current_v2')||'';
-const save=()=>{localStorage.setItem('tlnd_v2',JSON.stringify(db));localStorage.setItem('tlnd_current_v2',current)};
-const guest=()=>db.guests.find(g=>g.pass===current);
+<!-- Firebase SDK (v10 Modular) -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-const STAFF_PASSWORD='staff2026';
-const ADMIN_PASSWORD='admin2026';
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyD-EXAMPLE_KEY_HERE", 
+        authDomain: "thailand-legends-never-d-f4131.firebaseapp.com",
+        projectId: "thailand-legends-never-d-f4131",
+        storageBucket: "thailand-legends-never-d-f4131.appspot.com",
+        messagingSenderId: "100000000000",
+        appId: "1:100000000000:web:abcdef123456"
+    };
 
-let staffAuth=sessionStorage.getItem('tlnd_staff_auth')==='1';
-let adminAuth=sessionStorage.getItem('tlnd_admin_auth')==='1';
+    // Initialize Firebase & Firestore
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-function staffLogin(){if(staffPassword.value===STAFF_PASSWORD){staffAuth=true;sessionStorage.setItem('tlnd_staff_auth','1');staffPassword.value='';staffLoginMsg.innerHTML='';render()}else{staffLoginMsg.innerHTML='<div class="notice warning">รหัสผ่านไม่ถูกต้อง</div>'}}
-function staffLogout(){staffAuth=false;sessionStorage.removeItem('tlnd_staff_auth');show('home')}
-function adminLogin(){if(adminPassword.value===ADMIN_PASSWORD){adminAuth=true;sessionStorage.setItem('tlnd_admin_auth','1');adminPassword.value='';adminLoginMsg.innerHTML='';render()}else{adminLoginMsg.innerHTML='<div class="notice warning">รหัสผ่านไม่ถูกต้อง</div>'}}
-function adminLogout(){adminAuth=false;sessionStorage.removeItem('tlnd_admin_auth');show('home')}
-function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');render()}
+    // Form Handlers
+    const form = document.getElementById('passForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusMsg = document.getElementById('statusMessage');
 
-function register(){
-  let n = document.getElementById('name').value.trim();
-  let p = document.getElementById('phone').value.trim();
-  let e = document.getElementById('email').value.trim();
-  let pdpa = document.getElementById('pdpaConsent').checked;
-  let msg = document.getElementById('regMsg');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        submitBtn.disabled = true;
+        submitBtn.innerText = "กำลังบันทึกข้อมูล...";
+        statusMsg.style.display = 'none';
 
-  if(!n){
-    msg.innerHTML = '<div class="notice warning">⚠️ กรุณากรอกชื่อ–นามสกุล</div>';
-    alert('กรุณากรอกชื่อ–นามสกุล');
-    return;
-  }
-  
-  const phoneRegex = /^0\d{9}$/;
-  if(!phoneRegex.test(p)){
-    msg.innerHTML = '<div class="notice warning">⚠️ กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง (ตัวเลข 10 หลัก ขึ้นต้นด้วย 0)</div>';
-    alert('กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง (10 หลัก)');
-    return;
-  }
+        const fullname = document.getElementById('fullname').value;
+        const email = document.getElementById('email').value;
+        const tier = document.getElementById('tier').value;
 
-  if(e){
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!emailRegex.test(e)){
-      msg.innerHTML = '<div class="notice warning">⚠️ รูปแบบ E-mail ไม่ถูกต้อง</div>';
-      alert('รูปแบบ E-mail ไม่ถูกต้อง');
-      return;
+        try {
+            // บันทึกลง Collection ชื่อ "participants"
+            await addDoc(collection(db, "participants"), {
+                fullname: fullname,
+                email: email,
+                passTier: tier,
+                createdAt: serverTimestamp()
+            });
+
+            showStatus("ลงทะเบียนรับ Legend Pass เรียบร้อยแล้ว!", "success");
+            form.reset();
+        } catch (error) {
+            console.error("Error adding document: ", error);
+            showStatus("เกิดข้อผิดพลาด: " + error.message, "error");
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "ยืนยันการรับ Pass";
+        }
+    });
+
+    function showStatus(text, type) {
+        statusMsg.innerText = text;
+        statusMsg.className = type;
+        statusMsg.style.display = 'block';
     }
-  }
+</script>
 
-  if(!pdpa){
-    msg.innerHTML = '<div class="notice warning">⚠️ กรุณากดยินยอมนโยบายความเป็นส่วนตัว (PDPA)</div>';
-    alert('กรุณาติ๊กยินยอมนโยบายความเป็นส่วนตัว (PDPA) ก่อนกดสร้าง Pass');
-    return;
-  }
-
-  let old = db.guests.find(g => g.phone === p);
-  if(old){
-    current = old.pass;
-    save();
-    show('pass');
-    return;
-  }
-
-  current = 'LP-' + String(db.guests.length + 1).padStart(4, '0');
-  db.guests.push({
-    pass: current,
-    name: n,
-    phone: p,
-    email: e,
-    entries: ['registration'],
-    history: [{ activity: 'registration', time: new Date().toLocaleString('th-TH') }]
-  });
-  
-  save();
-  show('pass');
-}
-
-function render(){
-  let g=guest();
-  passContent.innerHTML=g?'<div class="pass">🎟️ LEGEND PASS<div class="code">'+g.pass+'</div><div>'+esc(g.name)+'</div><div class="muted">YOUR ENTRIES</div><div class="big">'+g.entries.length+' / 6</div></div>':'<div class="notice">กรุณาลงทะเบียนก่อน</div>';
-  if(g)activityList.innerHTML=activities.map(a=>{let done=g.entries.includes(a[0]);return '<div class="activity"><div>'+a[1]+'<small>'+(done?'ได้รับ Entry แล้ว':'ต้องผ่าน Staff Verification')+'</small></div><span class="status '+(done?'done':'todo')+'">'+(done?'✓ Claimed':'+1 Entry')+'</span>'+(!done?'<button onclick="simulateScan(\''+a[0]+'\')">จำลอง Scan</button>':'')+'</div>'}).join('');
-  
-  staffLoginBox.style.display=staffAuth?'none':'block';
-  staffContent.style.display=staffAuth?'block':'none';
-  if(staffAuth){staffActivity.innerHTML=activities.map(a=>'<option value="'+a[0]+'">'+a[1]+'</option>').join('')}
-  
-  adminLoginBox.style.display=adminAuth?'none':'block';
-  adminContent.style.display=adminAuth?'block':'none';
-  if(adminAuth){
-    countGuests.textContent=db.guests.length;
-    countEntries.textContent=db.guests.reduce((s,g)=>s+g.entries.length,0);
-    guestTable.innerHTML=db.guests.map(g=>'<tr><td>'+g.pass+'</td><td>'+esc(g.name)+'</td><td>'+g.entries.length+'</td><td><button class="btn-danger" onclick="deleteGuest(\''+g.pass+'\')">ลบ</button></td></tr>').join('')
-  }
-}
-
-function deleteGuest(passCode){
-  if(confirm('คุณต้องการลบข้อมูล Pass: ' + passCode + ' ใช่หรือไม่?')){
-    db.guests = db.guests.filter(g => g.pass !== passCode);
-    if(current === passCode) current = '';
-    save();
-    render();
-  }
-}
-
-function resetAllData(){
-  if(confirm('⚠️ คุณต้องการลบข้อมูลผู้เข้าร่วมทั้งหมดใช่หรือไม่? (ไม่สามารถกู้คืนได้)')){
-    db = { guests: [] };
-    current = '';
-    save();
-    render();
-    alert('ลบข้อมูลทั้งหมดเรียบร้อยแล้ว');
-  }
-}
-
-function simulateScan(id){let g=guest();if(!g){alert('กรุณาลงทะเบียนก่อน');return show('home')}if(g.entries.includes(id))return alert('คุณได้รับ Entry จากกิจกรรมนี้แล้ว');staffPass.value=g.pass;staffActivity.value=id;show('staff');staffMsg.innerHTML='<div class="notice">จำลองการสแกน QR สำเร็จ — ในระบบจริง Staff จะเป็นผู้ยืนยัน</div>'}
-function verifyStaff(){let g=db.guests.find(x=>x.pass===staffPass.value.trim()),id=staffActivity.value;if(!g)return staffMsg.innerHTML='<div class="notice warning">ไม่พบ Legend Pass นี้</div>';if(g.entries.includes(id))return staffMsg.innerHTML='<div class="notice warning">Pass นี้ได้รับ Entry กิจกรรมนี้แล้ว</div>';g.entries.push(id);g.history.push({activity:id,time:new Date().toLocaleString('th-TH'),method:'staff'});save();staffMsg.innerHTML='<div class="notice success">ยืนยันสำเร็จ! +1 Entry ให้ '+esc(g.name)+'</div>';render()}
-function drawWinner(){if(!db.guests.length)return alert('ยังไม่มีผู้เข้าร่วม');let tickets=[];db.guests.forEach(g=>g.entries.forEach((_,i)=>tickets.push({g,i})));let t=tickets[Math.floor(Math.random()*tickets.length)],prize=document.getElementById('prize').value||'Prize';winner.innerHTML='<div>🎉 WINNER 🎉</div><div class="winnername">'+esc(t.g.name)+'</div><div>'+t.g.pass+'</div><div class="prize">🏆 '+esc(prize)+'</div>'}
-function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-render();
-</script></body></html>
-  
+</body>
+</html>
