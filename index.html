@@ -71,7 +71,7 @@
         p.subtitle { 
             color: #94a3b8; 
             text-align: center; 
-            margin-bottom: 24px; 
+            margin-bottom: 16px; 
             font-size: 13px; 
             font-weight: 300;
         }
@@ -79,6 +79,45 @@
         p.subtitle span {
             color: #fef08a;
             font-weight: 400;
+        }
+
+        /* Real-time Counter Styles */
+        .counter-container {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .counter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #cbd5e1;
+            margin-bottom: 6px;
+        }
+
+        .counter-number {
+            color: #f59e0b;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .progress-bar-bg {
+            background: rgba(255, 255, 255, 0.1);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #f59e0b, #ec4899);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
         }
 
         .form-group { margin-bottom: 18px; }
@@ -160,6 +199,14 @@
             box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
         }
 
+        button:disabled {
+            background: #475569;
+            color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
         #statusMessage { 
             margin-top: 16px; 
             text-align: center; 
@@ -184,44 +231,11 @@
             margin-top: 10px;
         }
 
-        .ticket-header {
-            font-size: 12px;
-            color: #ec4899;
-            letter-spacing: 2px;
-            font-weight: 700;
-        }
-
-        .ticket-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 20px;
-            color: #f59e0b;
-            font-weight: 900;
-            margin: 6px 0 16px 0;
-        }
-
-        .ticket-name {
-            font-size: 18px;
-            color: #ffffff;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .ticket-email {
-            font-size: 12px;
-            color: #a1a1aa;
-            margin-bottom: 20px;
-        }
-
-        .ticket-status {
-            display: inline-block;
-            background: rgba(34, 197, 94, 0.15);
-            color: #4ade80;
-            border: 1px solid #22c55e;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
+        .ticket-header { font-size: 12px; color: #ec4899; letter-spacing: 2px; font-weight: 700; }
+        .ticket-title { font-family: 'Montserrat', sans-serif; font-size: 20px; color: #f59e0b; font-weight: 900; margin: 6px 0 16px 0; }
+        .ticket-name { font-size: 18px; color: #ffffff; font-weight: 600; margin-bottom: 4px; }
+        .ticket-email { font-size: 12px; color: #a1a1aa; margin-bottom: 20px; }
+        .ticket-status { display: inline-block; background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid #22c55e; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -231,6 +245,17 @@
     <h1>THAILAND LEGENDS<br>NEVER DIE</h1>
     <p class="subtitle">ลงทะเบียนรับสิทธิ์ <span>LEGEND PASS</span> เข้าชมงานฟรี</p>
     
+    <!-- Real-time Quota Counter -->
+    <div class="counter-container">
+        <div class="counter-header">
+            <span>สิทธิ์คงเหลือ</span>
+            <span class="counter-number" id="quotaText">กำลังโหลด...</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+    </div>
+
     <form id="passForm">
         <div class="form-group">
             <label for="fullname">ชื่อ-นามสกุล</label>
@@ -267,7 +292,7 @@
 <!-- Firebase SDK (v10 Modular) -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
         authDomain: "thailand-legends-never-d-f4131.firebaseapp.com",
@@ -280,14 +305,44 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    const MAX_QUOTA = 50; // กำหนดจำนวนสิทธิ์สูงสุด
+    let currentCount = 0;
+
     const form = document.getElementById('passForm');
     const submitBtn = document.getElementById('submitBtn');
     const statusMsg = document.getElementById('statusMessage');
     const passTicket = document.getElementById('passTicket');
+    const quotaText = document.getElementById('quotaText');
+    const progressBar = document.getElementById('progressBar');
+
+    // ดึงข้อมูลผู้เข้าร่วมจาก Firestore แบบ Real-time
+    onSnapshot(collection(db, "participants"), (snapshot) => {
+        currentCount = snapshot.size;
+        
+        // อัปเดตข้อความตัวเลขสิทธิ์
+        quotaText.innerText = `${currentCount} / ${MAX_QUOTA} สิทธิ์`;
+        
+        // อัปเดตความกว้างของแถบ Progress Bar
+        const percentage = Math.min((currentCount / MAX_QUOTA) * 100, 100);
+        progressBar.style.width = `${percentage}%`;
+
+        // ตรวจสอบว่าสิทธิ์เต็มหรือยัง
+        if (currentCount >= MAX_QUOTA) {
+            quotaText.innerText = "สิทธิ์เต็มแล้ว (50/50)";
+            quotaText.style.color = "#ef4444";
+            submitBtn.disabled = true;
+            submitBtn.innerText = "สิทธิ์เต็มแล้ว (SOLD OUT)";
+        }
+    });
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        if (currentCount >= MAX_QUOTA) {
+            alert("ขออภัย สิทธิ์ Legend Pass เต็มแล้ว 50 สิทธิ์!");
+            return;
+        }
+
         submitBtn.disabled = true;
         submitBtn.innerText = "กำลังสร้าง Legend Pass...";
         statusMsg.style.display = 'none';
@@ -304,7 +359,7 @@
                 createdAt: serverTimestamp()
             });
 
-            // ซ่อนฟอร์มลงทะเบียน แล้วแสดงบัตร Pass ดิจิทัลแทน
+            // ซ่อนฟอร์ม แล้วแสดงบัตร Pass ดิจิทัลแทน
             form.style.display = 'none';
             document.getElementById('ticketName').innerText = fullname;
             document.getElementById('ticketEmail').innerText = email;
@@ -322,4 +377,5 @@
 </script>
 
 </body>
-</html>
+    </html>
+    
