@@ -4,32 +4,232 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Legend Pass - Thailand Legends Never Die</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .card { background: #1e293b; border-radius: 16px; padding: 32px; width: 100%; max-width: 450px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #334155; }
-        h1 { color: #f59e0b; text-align: center; margin-bottom: 8px; font-size: 24px; }
-        p.subtitle { color: #94a3b8; text-align: center; margin-bottom: 24px; font-size: 14px; }
-        .form-group { margin-bottom: 16px; }
-        label { display: block; margin-bottom: 6px; color: #cbd5e1; font-size: 14px; }
-        input[type="text"], input[type="email"] { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 14px; outline: none; }
-        input[type="text"]:focus, input[type="email"]:focus { border-color: #f59e0b; }
-        .pdpa-group { display: flex; align-items: flex-start; gap: 10px; margin-top: 16px; margin-bottom: 20px; }
-        .pdpa-group input[type="checkbox"] { width: 18px; height: 18px; accent-color: #f59e0b; cursor: pointer; margin-top: 2px; }
-        .pdpa-group label { font-size: 13px; color: #94a3b8; line-height: 1.4; cursor: pointer; margin-bottom: 0; }
-        .pdpa-group a { color: #f59e0b; text-decoration: underline; }
-        button { width: 100%; padding: 14px; background: #f59e0b; color: #0f172a; font-weight: bold; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.2s; }
-        button:hover { background: #d97706; }
-        #statusMessage { margin-top: 16px; text-align: center; font-size: 14px; display: none; padding: 10px; border-radius: 6px; }
-        .success { background: #065f46; color: #34d399; }
-        .error { background: #991b1b; color: #fca5a5; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kanit', 'Montserrat', sans-serif; }
+        
+        body { 
+            background: #050505; 
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(236, 72, 153, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(217, 119, 6, 0.15) 0%, transparent 40%);
+            color: #f8fafc; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            padding: 20px; 
+        }
+
+        .card { 
+            background: rgba(18, 18, 20, 0.85); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px; 
+            padding: 36px 28px; 
+            width: 100%; 
+            max-width: 440px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(236, 72, 153, 0.1); 
+            border: 1px solid rgba(217, 119, 6, 0.3); 
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #f59e0b, #ec4899, #f59e0b);
+        }
+
+        .event-badge {
+            text-align: center;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #ec4899;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        h1 { 
+            background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #d97706 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center; 
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 26px; 
+            letter-spacing: 1px;
+            line-height: 1.2;
+            margin-bottom: 6px;
+        }
+
+        p.subtitle { 
+            color: #94a3b8; 
+            text-align: center; 
+            margin-bottom: 24px; 
+            font-size: 13px; 
+            font-weight: 300;
+        }
+
+        p.subtitle span {
+            color: #fef08a;
+            font-weight: 400;
+        }
+
+        .form-group { margin-bottom: 18px; }
+
+        label { 
+            display: block; 
+            margin-bottom: 6px; 
+            color: #cbd5e1; 
+            font-size: 13px; 
+            font-weight: 400;
+        }
+
+        input[type="text"], input[type="email"] { 
+            width: 100%; 
+            padding: 14px; 
+            border-radius: 12px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            background: rgba(10, 10, 12, 0.7); 
+            color: #fff; 
+            font-size: 14px; 
+            outline: none; 
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus { 
+            border-color: #f59e0b; 
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+        }
+
+        .pdpa-group { 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 12px; 
+            margin-top: 18px; 
+            margin-bottom: 24px; 
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .pdpa-group input[type="checkbox"] { 
+            width: 18px; 
+            height: 18px; 
+            accent-color: #ec4899; 
+            cursor: pointer; 
+            margin-top: 2px; 
+        }
+
+        .pdpa-group label { 
+            font-size: 12px; 
+            color: #94a3b8; 
+            line-height: 1.5; 
+            cursor: pointer; 
+            margin-bottom: 0; 
+        }
+
+        .pdpa-group a { 
+            color: #f59e0b; 
+            text-decoration: underline; 
+        }
+
+        button { 
+            width: 100%; 
+            padding: 15px; 
+            background: linear-gradient(135deg, #f59e0b 0%, #ec4899 100%);
+            color: #0f172a; 
+            font-weight: 700; 
+            border: none; 
+            border-radius: 12px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.2);
+        }
+
+        button:hover { 
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+        }
+
+        #statusMessage { 
+            margin-top: 16px; 
+            text-align: center; 
+            font-size: 13px; 
+            display: none; 
+            padding: 12px; 
+            border-radius: 8px; 
+        }
+
+        .error { background: rgba(153, 27, 27, 0.4); color: #fca5a5; border: 1px solid #ef4444; }
+
+        /* VIP Digital Pass Card Effect */
+        #passTicket {
+            display: none;
+            background: linear-gradient(145deg, #18181b 0%, #09090b 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.2);
+            margin-top: 10px;
+        }
+
+        .ticket-header {
+            font-size: 12px;
+            color: #ec4899;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .ticket-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 20px;
+            color: #f59e0b;
+            font-weight: 900;
+            margin: 6px 0 16px 0;
+        }
+
+        .ticket-name {
+            font-size: 18px;
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .ticket-email {
+            font-size: 12px;
+            color: #a1a1aa;
+            margin-bottom: 20px;
+        }
+
+        .ticket-status {
+            display: inline-block;
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+            border: 1px solid #22c55e;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h1>LEGEND PASS</h1>
-    <p class="subtitle">ลงทะเบียนรับสิทธิ์เข้าร่วมแคมเปญ</p>
+    <div class="event-badge">BAR FLAIR MIXOLOGIST & TOURISM</div>
+    <h1>THAILAND LEGENDS<br>NEVER DIE</h1>
+    <p class="subtitle">ลงทะเบียนรับสิทธิ์ <span>LEGEND PASS</span> เข้าชมงานฟรี</p>
     
     <form id="passForm">
         <div class="form-group">
@@ -41,18 +241,27 @@
             <input type="email" id="email" placeholder="example@email.com" required>
         </div>
         
-        <!-- ส่วนยอมรับนโยบาย PDPA -->
         <div class="pdpa-group">
             <input type="checkbox" id="pdpa" required>
             <label for="pdpa">
-                ฉันได้อ่านและยอมรับ <a href="#" onclick="alert('ข้อกำหนดและนโยบายความเป็นส่วนตัว: ข้อมูลของคุณจะถูกใช้เพื่อสิทธิ์การเข้าร่วมแคมเปญ Legend Pass เท่านั้น'); return false;">นโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)</a>
+                ฉันได้อ่านและยอมรับ <a href="#" onclick="alert('ข้อกำหนด PDPA: ข้อมูลของคุณจะถูกเก็บรักษาอย่างปลอดภัยเพื่อใช้รับสิทธิ์เข้าร่วมงาน Thailand Legends Never Die เท่านั้น'); return false;">นโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)</a>
             </label>
         </div>
 
-        <button type="submit" id="submitBtn">ยืนยันการรับ Pass</button>
+        <button type="submit" id="submitBtn">ยืนยันรับ LEGEND PASS</button>
     </form>
 
     <div id="statusMessage"></div>
+
+    <!-- บัตรดิจิทัลที่จะเด้งขึ้นมาหลังลงทะเบียนสำเร็จ -->
+    <div id="passTicket">
+        <div class="ticket-header">OFFICIAL ENTRY PASS</div>
+        <div class="ticket-title">LEGEND PASS</div>
+        <div class="ticket-name" id="ticketName">-</div>
+        <div class="ticket-email" id="ticketEmail">-</div>
+        <div class="ticket-status">✓ REGISTRATION CONFIRMED</div>
+        <p style="font-size: 11px; color: #71717a; margin-top: 16px;">โปรดบันทึกภาพหน้าจอนี้เพื่อแสดง ณ จุดลงทะเบียนเข้างาน</p>
+    </div>
 </div>
 
 <!-- Firebase SDK (v10 Modular) -->
@@ -60,7 +269,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Firebase Configuration
     const firebaseConfig = {
         authDomain: "thailand-legends-never-d-f4131.firebaseapp.com",
         projectId: "thailand-legends-never-d-f4131",
@@ -69,20 +277,19 @@
         appId: "1:100000000000:web:abcdef123456"
     };
 
-    // Initialize Firebase & Firestore
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Form Handlers
     const form = document.getElementById('passForm');
     const submitBtn = document.getElementById('submitBtn');
     const statusMsg = document.getElementById('statusMessage');
+    const passTicket = document.getElementById('passTicket');
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
         submitBtn.disabled = true;
-        submitBtn.innerText = "กำลังบันทึกข้อมูล...";
+        submitBtn.innerText = "กำลังสร้าง Legend Pass...";
         statusMsg.style.display = 'none';
 
         const fullname = document.getElementById('fullname').value;
@@ -90,30 +297,28 @@
         const pdpaAccepted = document.getElementById('pdpa').checked;
 
         try {
-            // บันทึกลง Collection ชื่อ "participants"
             await addDoc(collection(db, "participants"), {
                 fullname: fullname,
                 email: email,
-                pdpaAccepted: pdpaAccepted, // บันทึกสถานะการยอมรับ PDPA (true)
+                pdpaAccepted: pdpaAccepted,
                 createdAt: serverTimestamp()
             });
 
-            showStatus("ลงทะเบียนรับ Legend Pass เรียบร้อยแล้ว!", "success");
-            form.reset();
+            // ซ่อนฟอร์มลงทะเบียน แล้วแสดงบัตร Pass ดิจิทัลแทน
+            form.style.display = 'none';
+            document.getElementById('ticketName').innerText = fullname;
+            document.getElementById('ticketEmail').innerText = email;
+            passTicket.style.display = 'block';
+
         } catch (error) {
             console.error("Error adding document: ", error);
-            showStatus("เกิดข้อผิดพลาด: " + error.message, "error");
-        } finally {
+            statusMsg.innerText = "เกิดข้อผิดพลาด: " + error.message;
+            statusMsg.className = "error";
+            statusMsg.style.display = 'block';
             submitBtn.disabled = false;
-            submitBtn.innerText = "ยืนยันการรับ Pass";
+            submitBtn.innerText = "ยืนยันรับ LEGEND PASS";
         }
     });
-
-    function showStatus(text, type) {
-        statusMsg.innerText = text;
-        statusMsg.className = type;
-        statusMsg.style.display = 'block';
-    }
 </script>
 
 </body>
