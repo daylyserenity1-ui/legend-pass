@@ -85,7 +85,6 @@
             font-weight: 400;
         }
 
-        /* Real-time Counter Styles */
         .counter-container {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(245, 158, 11, 0.2);
@@ -238,7 +237,6 @@
 
         .error { background: rgba(153, 27, 27, 0.4); color: #fca5a5; border: 1px solid #ef4444; }
 
-        /* VIP Digital Pass Card Effect */
         #passTicket {
             display: none;
             background: linear-gradient(145deg, #18181b 0%, #09090b 100%);
@@ -270,7 +268,6 @@
             letter-spacing: 2px;
         }
 
-        /* Container QR Code */
         #qrcode {
             display: flex;
             justify-content: center;
@@ -302,7 +299,6 @@
     <h1>THAILAND LEGENDS<br>NEVER DIE</h1>
     <p class="subtitle">ลงทะเบียนรับสิทธิ์ <span>LEGEND PASS</span> เข้าชมงานฟรี</p>
     
-    <!-- Real-time Quota Counter -->
     <div class="counter-container" id="counterBox">
         <div class="counter-header">
             <span>สิทธิ์คงเหลือ</span>
@@ -339,18 +335,15 @@
 
     <div id="statusMessage"></div>
 
-    <!-- บัตรดิจิทัลที่จะเด้งขึ้นมาหลังลงทะเบียนสำเร็จ -->
     <div id="passTicket">
         <div class="ticket-header">OFFICIAL ENTRY PASS</div>
         <div class="ticket-title">LEGEND PASS</div>
         
-        <!-- ส่วนแสดง Pass ID สุ่ม -->
         <div class="pass-id-box">
             <span style="font-size: 10px; color: #f59e0b; display: block; margin-bottom: 2px;">PASS ID</span>
             <span class="pass-id-text" id="ticketPassId">TLND-XXXX</span>
         </div>
 
-        <!-- QR Code แสดงบนบัตร -->
         <div id="qrcode"></div>
 
         <div class="ticket-name" id="ticketName">-</div>
@@ -359,7 +352,6 @@
         <p style="font-size: 11px; color: #a1a1aa; margin-top: 14px;">โปรดบันทึกภาพหน้าจอนี้ (Screenshot) หรือกดปุ่มดาวน์โหลดรูปภาพ เพื่อแสดง ณ จุดลงทะเบียนเข้างาน</p>
     </div>
 
-    <!-- ปุ่มบันทึกบัตรเป็นรูปภาพ -->
     <button type="button" id="downloadBtn" class="download-btn" style="display: none;">
         📥 บันทึกรูปภาพบัตรเข้างาน
     </button>
@@ -370,6 +362,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+    // Firebase Config
     const firebaseConfig = {
         authDomain: "thailand-legends-never-d-f4131.firebaseapp.com",
         projectId: "thailand-legends-never-d-f4131",
@@ -394,7 +387,6 @@
     const counterBox = document.getElementById('counterBox');
     const findPassBtn = document.getElementById('findPassBtn');
 
-    // ฟังก์ชันสุ่มรหัส Pass ID (เช่น TLND-8F3A)
     function generatePassID() {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let randomCode = '';
@@ -404,10 +396,9 @@
         return `TLND-${randomCode}`;
     }
 
-    // ฟังก์ชันสร้าง QR Code
     function renderQRCode(passId) {
         const qrContainer = document.getElementById("qrcode");
-        qrContainer.innerHTML = ""; // ล้าง QR Code เก่า
+        qrContainer.innerHTML = "";
         new QRCode(qrContainer, {
             text: passId,
             width: 110,
@@ -418,10 +409,9 @@
         });
     }
 
-    // ดึงข้อมูล Real-time จาก Firestore
+    // Real-time listener
     onSnapshot(collection(db, "participants"), (snapshot) => {
         currentCount = snapshot.size;
-        
         quotaText.innerText = `${currentCount} / ${MAX_QUOTA} สิทธิ์`;
         
         const percentage = Math.min((currentCount / MAX_QUOTA) * 100, 100);
@@ -433,9 +423,12 @@
             submitBtn.disabled = true;
             submitBtn.innerText = "สิทธิ์เต็มแล้ว (SOLD OUT)";
         }
+    }, (error) => {
+        console.error("Firestore Listen Error:", error);
+        quotaText.innerText = "0 / 50 สิทธิ์";
     });
 
-    // บันทึกข้อมูลลงทะเบียน
+    // Registration Handler
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -453,7 +446,6 @@
         statusMsg.style.display = 'none';
 
         try {
-            // 1. ตรวจสอบก่อนว่าอีเมลนี้เคยลงทะเบียนไปแล้วหรือยัง
             const participantsRef = collection(db, "participants");
             const q = query(participantsRef, where("email", "==", email));
             const querySnapshot = await getDocs(q);
@@ -468,7 +460,6 @@
                 return;
             }
 
-            // 2. ถ้าไม่ซ้ำ ให้สร้าง Pass ID และบันทึกข้อมูล
             submitBtn.innerText = "กำลังสร้าง Legend Pass...";
             const generatedPassId = generatePassID();
 
@@ -480,7 +471,6 @@
                 createdAt: serverTimestamp()
             });
 
-            // แสดงบัตร Pass + สร้าง QR Code + ปุ่มดาวน์โหลด
             form.style.display = 'none';
             counterBox.style.display = 'none';
             document.getElementById('ticketPassId').innerText = generatedPassId;
@@ -502,7 +492,7 @@
         }
     });
 
-    // ค้นหาบัตรเดิมกรณีเคยลงทะเบียนแล้ว
+    // Find Pass Handler
     findPassBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         const emailInput = document.getElementById('email').value.trim().toLowerCase();
@@ -552,7 +542,7 @@
         }
     });
 
-    // ฟังก์ชันสั่งเซฟบัตรดิจิทัลเป็นรูปภาพ PNG
+    // Download PNG Handler
     downloadBtn.addEventListener('click', () => {
         downloadBtn.innerText = "กำลังสร้างรูปภาพ...";
         downloadBtn.disabled = true;
@@ -567,4 +557,17 @@
             link.href = canvas.toDataURL('image/png');
             link.click();
 
-            downloadBtn.inne
+            downloadBtn.innerText = "📥 บันทึกรูปภาพบัตรเข้างาน";
+            downloadBtn.disabled = false;
+        }).catch(err => {
+            console.error("Download Error:", err);
+            alert("ไม่สามารถบันทึกรูปภาพได้ กรุณาใช้การแคปหน้าจอ (Screenshot) แทนครับ");
+            downloadBtn.innerText = "📥 บันทึกรูปภาพบัตรเข้างาน";
+            downloadBtn.disabled = false;
+        });
+    });
+</script>
+
+</body>
+    </html>
+    
