@@ -330,7 +330,7 @@
 <!-- Firebase SDK (v10 Modular) -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
         authDomain: "thailand-legends-never-d-f4131.firebaseapp.com",
@@ -391,16 +391,35 @@
             return;
         }
 
+        const fullname = document.getElementById('fullname').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const pdpaAccepted = document.getElementById('pdpa').checked;
+
         submitBtn.disabled = true;
-        submitBtn.innerText = "กำลังสร้าง Legend Pass...";
+        submitBtn.innerText = "กำลังตรวจสอบข้อมูล...";
         statusMsg.style.display = 'none';
 
-        const fullname = document.getElementById('fullname').value;
-        const email = document.getElementById('email').value;
-        const pdpaAccepted = document.getElementById('pdpa').checked;
-        const generatedPassId = generatePassID(); // สุ่มรหัส Pass ID
-
         try {
+            // 1. ตรวจสอบก่อนว่าอีเมลนี้เคยลงทะเบียนไปแล้วหรือยัง
+            const participantsRef = collection(db, "participants");
+            const q = query(participantsRef, where("email", "==", email));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                // ถ้าเจออีเมลซ้ำ ให้หยุดทำงานและแจ้งเตือน
+                alert("อีเมลนี้ถูกใช้ลงทะเบียนรับ Legend Pass ไปแล้วครับ!");
+                statusMsg.innerText = "อีเมลนี้ลงทะเบียนไปแล้ว ไม่สามารถลงทะเบียนซ้ำได้";
+                statusMsg.className = "error";
+                statusMsg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.innerText = "ยืนยันรับ LEGEND PASS";
+                return;
+            }
+
+            // 2. ถ้าไม่ซ้ำ ให้สร้าง Pass ID และบันทึกข้อมูล
+            submitBtn.innerText = "กำลังสร้าง Legend Pass...";
+            const generatedPassId = generatePassID();
+
             await addDoc(collection(db, "participants"), {
                 passId: generatedPassId,
                 fullname: fullname,
@@ -455,5 +474,5 @@
 </script>
 
 </body>
-    </html>
+        </html>
     
