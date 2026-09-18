@@ -7,13 +7,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
-    <!-- html2canvas สำหรับดาวน์โหลดการ์ดเป็นรูปภาพ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- qrcodejs สำหรับสร้าง QR Code บนบัตร -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kanit', 'Montserrat', sans-serif; }
-        
         body { 
             background: #050505; 
             background-image: 
@@ -26,7 +23,6 @@
             min-height: 100vh; 
             padding: 20px; 
         }
-
         .card { 
             background: rgba(18, 18, 20, 0.85); 
             backdrop-filter: blur(16px);
@@ -40,7 +36,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .card::before {
             content: '';
             position: absolute;
@@ -48,248 +43,60 @@
             height: 3px;
             background: linear-gradient(90deg, #f59e0b, #ec4899, #f59e0b);
         }
-
-        .event-badge {
-            text-align: center;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: #ec4899;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-        }
-
+        .event-badge { text-align: center; font-size: 11px; font-weight: 700; letter-spacing: 2px; color: #ec4899; text-transform: uppercase; margin-bottom: 6px; }
         h1 { 
             background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #d97706 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-align: center; 
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 900;
-            font-size: 26px; 
-            letter-spacing: 1px;
-            line-height: 1.2;
-            margin-bottom: 6px;
+            text-align: center; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 26px; letter-spacing: 1px; line-height: 1.2; margin-bottom: 6px;
         }
-
-        p.subtitle { 
-            color: #94a3b8; 
-            text-align: center; 
-            margin-bottom: 16px; 
-            font-size: 13px; 
-            font-weight: 300;
-        }
-
-        p.subtitle span {
-            color: #fef08a;
-            font-weight: 400;
-        }
-
-        .counter-container {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .counter-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 12px;
-            color: #cbd5e1;
-            margin-bottom: 6px;
-        }
-
-        .counter-number {
-            color: #f59e0b;
-            font-weight: 700;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .progress-bar-bg {
-            background: rgba(255, 255, 255, 0.1);
-            height: 8px;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            background: linear-gradient(90deg, #f59e0b, #ec4899);
-            height: 100%;
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
+        p.subtitle { color: #94a3b8; text-align: center; margin-bottom: 16px; font-size: 13px; font-weight: 300; }
+        p.subtitle span { color: #fef08a; font-weight: 400; }
+        .counter-container { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; text-align: center; }
+        .counter-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #cbd5e1; margin-bottom: 6px; }
+        .counter-number { color: #f59e0b; font-weight: 700; font-family: 'Montserrat', sans-serif; }
+        .progress-bar-bg { background: rgba(255, 255, 255, 0.1); height: 8px; border-radius: 4px; overflow: hidden; }
+        .progress-bar-fill { background: linear-gradient(90deg, #f59e0b, #ec4899); height: 100%; width: 0%; transition: width 0.5s ease; }
         .form-group { margin-bottom: 18px; }
-
-        label { 
-            display: block; 
-            margin-bottom: 6px; 
-            color: #cbd5e1; 
-            font-size: 13px; 
-            font-weight: 400;
-        }
-
+        label { display: block; margin-bottom: 6px; color: #cbd5e1; font-size: 13px; font-weight: 400; }
         input[type="text"], input[type="email"] { 
-            width: 100%; 
-            padding: 14px; 
-            border-radius: 12px; 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            background: rgba(10, 10, 12, 0.7); 
-            color: #fff; 
-            font-size: 14px; 
-            outline: none; 
-            transition: all 0.3s ease;
+            width: 100%; padding: 14px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(10, 10, 12, 0.7); color: #fff; font-size: 14px; outline: none; transition: all 0.3s ease;
         }
-
-        input[type="text"]:focus, input[type="email"]:focus { 
-            border-color: #f59e0b; 
-            box-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
-        }
-
+        input[type="text"]:focus, input[type="email"]:focus { border-color: #f59e0b; box-shadow: 0 0 12px rgba(245, 158, 11, 0.25); }
         .pdpa-group { 
-            display: flex; 
-            align-items: flex-start; 
-            gap: 12px; 
-            margin-top: 18px; 
-            margin-bottom: 20px; 
-            background: rgba(255, 255, 255, 0.02);
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex; align-items: flex-start; gap: 12px; margin-top: 18px; margin-bottom: 20px; background: rgba(255, 255, 255, 0.02); padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.05);
         }
-
-        .pdpa-group input[type="checkbox"] { 
-            width: 18px; 
-            height: 18px; 
-            accent-color: #ec4899; 
-            cursor: pointer; 
-            margin-top: 2px; 
-        }
-
-        .pdpa-group label { 
-            font-size: 12px; 
-            color: #94a3b8; 
-            line-height: 1.5; 
-            cursor: pointer; 
-            margin-bottom: 0; 
-        }
-
-        .pdpa-group a { 
-            color: #f59e0b; 
-            text-decoration: underline; 
-        }
-
+        .pdpa-group input[type="checkbox"] { width: 18px; height: 18px; accent-color: #ec4899; cursor: pointer; margin-top: 2px; }
+        .pdpa-group label { font-size: 12px; color: #94a3b8; line-height: 1.5; cursor: pointer; margin-bottom: 0; }
+        .pdpa-group a { color: #f59e0b; text-decoration: underline; }
         button { 
-            width: 100%; 
-            padding: 15px; 
-            background: linear-gradient(135deg, #f59e0b 0%, #ec4899 100%);
-            color: #0f172a; 
-            font-weight: 700; 
-            border: none; 
-            border-radius: 12px; 
-            font-size: 16px; 
-            cursor: pointer; 
-            transition: all 0.3s ease; 
-            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.2);
+            width: 100%; padding: 15px; background: linear-gradient(135deg, #f59e0b 0%, #ec4899 100%); color: #0f172a; font-weight: 700; border: none; border-radius: 12px; font-size: 16px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.2);
         }
-
-        button:hover { 
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
-        }
-
-        button:disabled {
-            background: #475569;
-            color: #94a3b8;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-        }
-
-        .find-pass-link {
-            text-align: center;
-            margin-top: 14px;
-            font-size: 12px;
-        }
-
-        .find-pass-link a {
-            color: #ec4899;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .find-pass-link a:hover {
-            text-decoration: underline;
-        }
-
-        #statusMessage { 
-            margin-top: 16px; 
-            text-align: center; 
-            font-size: 13px; 
-            display: none; 
-            padding: 12px; 
-            border-radius: 8px; 
-        }
-
+        button:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35); }
+        button:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; box-shadow: none; transform: none; }
+        .find-pass-link { text-align: center; margin-top: 14px; font-size: 12px; }
+        .find-pass-link a { color: #ec4899; text-decoration: none; font-weight: 600; }
+        .find-pass-link a:hover { text-decoration: underline; }
+        #statusMessage { margin-top: 16px; text-align: center; font-size: 13px; display: none; padding: 12px; border-radius: 8px; }
         .error { background: rgba(153, 27, 27, 0.4); color: #fca5a5; border: 1px solid #ef4444; }
-
+        
         #passTicket {
-            display: none;
-            background: linear-gradient(145deg, #18181b 0%, #09090b 100%);
-            border: 2px solid #f59e0b;
-            border-radius: 16px;
-            padding: 24px;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 0 25px rgba(245, 158, 11, 0.2);
-            margin-top: 10px;
+            display: none; background: linear-gradient(145deg, #18181b 0%, #09090b 100%); border: 2px solid #f59e0b; border-radius: 16px; padding: 24px; text-align: center; position: relative; box-shadow: 0 0 25px rgba(245, 158, 11, 0.2); margin-top: 10px;
         }
-
         .ticket-header { font-size: 12px; color: #ec4899; letter-spacing: 2px; font-weight: 700; }
         .ticket-title { font-family: 'Montserrat', sans-serif; font-size: 20px; color: #f59e0b; font-weight: 900; margin: 4px 0 12px 0; }
-        
         .pass-id-box {
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px dashed #f59e0b;
-            padding: 8px 14px;
-            border-radius: 8px;
-            display: inline-block;
-            margin-bottom: 14px;
+            background: rgba(245, 158, 11, 0.1); border: 1px dashed #f59e0b; padding: 8px 14px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 14px; cursor: pointer;
         }
-        .pass-id-text {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 16px;
-            font-weight: 900;
-            color: #fef08a;
-            letter-spacing: 2px;
-        }
-
-        #qrcode {
-            display: flex;
-            justify-content: center;
-            margin: 12px 0;
-        }
-        #qrcode img {
-            border: 4px solid #fff;
-            border-radius: 8px;
-            padding: 4px;
-            background: #fff;
-        }
-
+        .pass-id-text { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 900; color: #fef08a; letter-spacing: 2px; }
+        .copy-btn { background: none; border: none; color: #f59e0b; font-size: 12px; cursor: pointer; text-decoration: underline; padding: 0; width: auto; box-shadow: none; }
+        .copy-btn:hover { background: none; transform: none; color: #fff; }
+        #qrcode { display: flex; justify-content: center; margin: 12px 0; }
+        #qrcode img { border: 4px solid #fff; border-radius: 8px; padding: 4px; background: #fff; }
         .ticket-name { font-size: 18px; color: #ffffff; font-weight: 600; margin-bottom: 4px; }
         .ticket-email { font-size: 12px; color: #a1a1aa; margin-bottom: 14px; }
         .ticket-status { display: inline-block; background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid #22c55e; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-        
-        .download-btn {
-            margin-top: 18px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: #ffffff;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
-        }
+        .download-btn { margin-top: 18px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25); }
     </style>
 </head>
 <body>
@@ -322,7 +129,7 @@
         <div class="pdpa-group">
             <input type="checkbox" id="pdpa" required>
             <label for="pdpa">
-                ฉันได้อ่านและยอมรับ <a href="#" onclick="alert('ข้อกำหนด PDPA: ข้อมูลของคุณจะถูกเก็บรักษาอย่างปลอดภัยเพื่อใช้รับสิทธิ์เข้าร่วมงาน Thailand Legends Never Die เท่านั้น'); return false;">นโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)</a>
+                ฉันได้อ่านและยอมรับ <a href="#" onclick="alert('นโยบาย PDPA: ข้อมูลส่วนบุคคลจะถูกเก็บรักษาอย่างปลอดภัยเพื่อยืนยันการรับสิทธิ์เข้าร่วมงาน Thailand Legends Never Die เท่านั้น'); return false;">นโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)</a>
             </label>
         </div>
 
@@ -339,17 +146,19 @@
         <div class="ticket-header">OFFICIAL ENTRY PASS</div>
         <div class="ticket-title">LEGEND PASS</div>
         
-        <div class="pass-id-box">
-            <span style="font-size: 10px; color: #f59e0b; display: block; margin-bottom: 2px;">PASS ID</span>
-            <span class="pass-id-text" id="ticketPassId">TLND-XXXX</span>
+        <div>
+            <div class="pass-id-box" id="copyBox" title="คลิกเพื่อคัดลอกรหัส">
+                <span class="pass-id-text" id="ticketPassId">TLND-XXXX</span>
+                <button type="button" class="copy-btn" id="copyBtnTag">📋</button>
+            </div>
         </div>
 
         <div id="qrcode"></div>
 
         <div class="ticket-name" id="ticketName">-</div>
         <div class="ticket-email" id="ticketEmail">-</div>
-        <div class="ticket-status">✓ REGISTRATION CONFIRMED</div>
-        <p style="font-size: 11px; color: #a1a1aa; margin-top: 14px;">โปรดบันทึกภาพหน้าจอนี้ (Screenshot) หรือกดปุ่มดาวน์โหลดรูปภาพ เพื่อแสดง ณ จุดลงทะเบียนเข้างาน</p>
+        <div class="ticket-status" id="ticketStatusBadge">✓ REGISTRATION CONFIRMED</div>
+        <p style="font-size: 11px; color: #a1a1aa; margin-top: 14px;">โปรดเซฟรูปภาพนี้ไว้แสดง ณ จุดลงทะเบียน (สแกนด้วยเครื่องของสต๊าฟหน้างาน)</p>
     </div>
 
     <button type="button" id="downloadBtn" class="download-btn" style="display: none;">
@@ -357,12 +166,10 @@
     </button>
 </div>
 
-<!-- Firebase SDK (v10 Modular) -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Firebase Config
     const firebaseConfig = {
         authDomain: "thailand-legends-never-d-f4131.firebaseapp.com",
         projectId: "thailand-legends-never-d-f4131",
@@ -386,6 +193,7 @@
     const progressBar = document.getElementById('progressBar');
     const counterBox = document.getElementById('counterBox');
     const findPassBtn = document.getElementById('findPassBtn');
+    const copyBox = document.getElementById('copyBox');
 
     function generatePassID() {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -409,7 +217,6 @@
         });
     }
 
-    // Real-time listener
     onSnapshot(collection(db, "participants"), (snapshot) => {
         currentCount = snapshot.size;
         quotaText.innerText = `${currentCount} / ${MAX_QUOTA} สิทธิ์`;
@@ -423,12 +230,8 @@
             submitBtn.disabled = true;
             submitBtn.innerText = "สิทธิ์เต็มแล้ว (SOLD OUT)";
         }
-    }, (error) => {
-        console.error("Firestore Listen Error:", error);
-        quotaText.innerText = "0 / 50 สิทธิ์";
     });
 
-    // Registration Handler
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -442,7 +245,7 @@
         const pdpaAccepted = document.getElementById('pdpa').checked;
 
         submitBtn.disabled = true;
-        submitBtn.innerText = "กำลังตรวจสอบข้อมูล...";
+        submitBtn.innerText = "กำลังตรวจสอบสิทธิ์...";
         statusMsg.style.display = 'none';
 
         try {
@@ -452,11 +255,12 @@
 
             if (!querySnapshot.empty) {
                 alert("อีเมลนี้ถูกใช้ลงทะเบียนรับ Legend Pass ไปแล้วครับ!");
-                statusMsg.innerText = "อีเมลนี้ลงทะเบียนไปแล้ว สามารถกด 'ค้นหาบัตรของคุณ' ด้านล่างได้เลยครับ";
-                statusMsg.className = "error";
+                statusMsg.innerText = "อีเมลนี้ลงทะเบียนแล้ว ระบบกำลังเปิดบัตรของคุณ...";
+                statusMsg.className = "";
                 statusMsg.style.display = 'block';
-                submitBtn.disabled = false;
-                submitBtn.innerText = "ยืนยันรับ LEGEND PASS";
+
+                const userData = querySnapshot.docs[0].data();
+                showPass(userData);
                 return;
             }
 
@@ -468,19 +272,11 @@
                 fullname: fullname,
                 email: email,
                 pdpaAccepted: pdpaAccepted,
+                status: "registered",
                 createdAt: serverTimestamp()
             });
 
-            form.style.display = 'none';
-            counterBox.style.display = 'none';
-            document.getElementById('ticketPassId').innerText = generatedPassId;
-            document.getElementById('ticketName').innerText = fullname;
-            document.getElementById('ticketEmail').innerText = email;
-            
-            renderQRCode(generatedPassId);
-
-            passTicket.style.display = 'block';
-            downloadBtn.style.display = 'block';
+            showPass({ passId: generatedPassId, fullname: fullname, email: email, status: "registered" });
 
         } catch (error) {
             console.error("Error adding document: ", error);
@@ -492,20 +288,42 @@
         }
     });
 
-    // Find Pass Handler
+    function showPass(userData) {
+        form.style.display = 'none';
+        counterBox.style.display = 'none';
+        statusMsg.style.display = 'none';
+
+        document.getElementById('ticketPassId').innerText = userData.passId;
+        document.getElementById('ticketName').innerText = userData.fullname;
+        document.getElementById('ticketEmail').innerText = userData.email;
+
+        const badge = document.getElementById('ticketStatusBadge');
+        if(userData.status === 'checked_in') {
+            badge.innerText = "✓ CHECKED-IN (เข้างานแล้ว)";
+            badge.style.borderColor = "#f59e0b";
+            badge.style.color = "#f59e0b";
+        } else {
+            badge.innerText = "✓ REGISTRATION CONFIRMED";
+        }
+
+        renderQRCode(userData.passId);
+
+        passTicket.style.display = 'block';
+        downloadBtn.style.display = 'block';
+    }
+
     findPassBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         const emailInput = document.getElementById('email').value.trim().toLowerCase();
 
         if (!emailInput) {
-            alert("กรุณากรอกอีเมลของคุณในช่อง 'อีเมล' แล้วกดปุ่มค้นหาอีกครั้งครับ");
+            alert("กรุณากรอกอีเมลของคุณในช่องด้านบนก่อนค้นหาครับ");
             document.getElementById('email').focus();
             return;
         }
 
         submitBtn.disabled = true;
-        statusMsg.innerText = "กำลังค้นหาบัตร Pass ของคุณ...";
-        statusMsg.className = "";
+        statusMsg.innerText = "กำลังค้นหาบัตร...";
         statusMsg.style.display = 'block';
 
         try {
@@ -514,26 +332,14 @@
             const querySnapshot = await getDocs(q);
 
             if (querySnapshot.empty) {
-                alert("ไม่พบข้อมูลการลงทะเบียนด้วยอีเมลนี้ กรุณาตรวจสอบอีเมลอีกครั้ง");
+                alert("ไม่พบข้อมูลการลงทะเบียนด้วยอีเมลนี้");
                 statusMsg.style.display = 'none';
                 submitBtn.disabled = false;
                 return;
             }
 
             const userData = querySnapshot.docs[0].data();
-
-            form.style.display = 'none';
-            counterBox.style.display = 'none';
-            statusMsg.style.display = 'none';
-
-            document.getElementById('ticketPassId').innerText = userData.passId;
-            document.getElementById('ticketName').innerText = userData.fullname;
-            document.getElementById('ticketEmail').innerText = userData.email;
-
-            renderQRCode(userData.passId);
-
-            passTicket.style.display = 'block';
-            downloadBtn.style.display = 'block';
+            showPass(userData);
 
         } catch (error) {
             console.error("Find pass error:", error);
@@ -542,15 +348,18 @@
         }
     });
 
-    // Download PNG Handler
+    copyBox.addEventListener('click', () => {
+        const passId = document.getElementById('ticketPassId').innerText;
+        navigator.clipboard.writeText(passId).then(() => {
+            alert(`คัดลอกรหัส ${passId} เรียบร้อยแล้ว!`);
+        });
+    });
+
     downloadBtn.addEventListener('click', () => {
         downloadBtn.innerText = "กำลังสร้างรูปภาพ...";
         downloadBtn.disabled = true;
 
-        html2canvas(passTicket, {
-            backgroundColor: '#09090b',
-            scale: 2
-        }).then(canvas => {
+        html2canvas(passTicket, { backgroundColor: '#09090b', scale: 2 }).then(canvas => {
             const passId = document.getElementById('ticketPassId').innerText;
             const link = document.createElement('a');
             link.download = `LegendPass-${passId}.png`;
@@ -559,15 +368,9 @@
 
             downloadBtn.innerText = "📥 บันทึกรูปภาพบัตรเข้างาน";
             downloadBtn.disabled = false;
-        }).catch(err => {
-            console.error("Download Error:", err);
-            alert("ไม่สามารถบันทึกรูปภาพได้ กรุณาใช้การแคปหน้าจอ (Screenshot) แทนครับ");
-            downloadBtn.innerText = "📥 บันทึกรูปภาพบัตรเข้างาน";
-            downloadBtn.disabled = false;
         });
     });
 </script>
-
 </body>
-    </html>
-    
+                </html>
+                
