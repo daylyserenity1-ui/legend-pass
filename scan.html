@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAFF SCANNER - Thailand Legends Never Die</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kanit', sans-serif; }
+        body { background: #09090b; color: #fff; padding: 16px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 480px; }
+        h1 { text-align: center; color: #f59e0b; font-size: 20px; margin-bottom: 12px; }
+        #reader { width: 100%; border-radius: 12px; overflow: hidden; background: #18181b; border: 1px solid #3f3f46; }
+        .manual-box { margin-top: 16px; display: flex; gap: 8px; }
+        input[type="text"] { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #3f3f46; background: #18181b; color: #fff; text-transform: uppercase; }
+        button { padding: 12px 20px; background: #f59e0b; border: none; border-radius: 8px; font-weight: 700; color: #000; cursor: pointer; }
+        .result-card { margin-top: 16px; padding: 16px; border-radius: 12px; text-align: center; display: none; }
+        .success { background: rgba(34, 197, 94, 0.2); border: 2px solid #22c55e; color: #4ade80; }
+        .warning { background: rgba(234, 179, 8, 0.2); border: 2px solid #eab308; color: #fde047; }
+        .error { background: rgba(239, 68, 68, 0.2); border: 2px solid #ef4444; color: #fca5a5; }
+        .info-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+        .info-detail { font-size: 14px; opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📱 STAFF CHECK-IN SCANNER</h1>
+    <div id="reader"></div>
+
+    <div class="manual-box">
+        <input type="text" id="manualPassId" placeholder="กรอกรหัส TLND-XXXX">
+        <button id="manualBtn">ตรวจสอบ</button>
+    </div>
+
+    <div id="resultCard" class="result-card">
+        <div class="info-title" id="resTitle">-</div>
+        <div class="info-detail" id="resName">-</div>
+        <div class="info-detail" id="resTime">-</div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        authDomain: "thailand-legends-never-d-f4131.firebaseapp.com",
+        projectId: "thailand-legends-never-d-f4131",
+        storageBucket: "thailand-legends-never-d-f4131.appspot.com",
+        messagingSenderId: "100000000000",
+        appId: "1:100000000000:web:abcdef123456"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const resultCard = document.getElementById('resultCard');
+    const resTitle = document.getElementById('resTitle');
+    const resName = document.getElementById('resName');
+    const resTime = document.getElementById('resTime');
+    let isProcessing = false;
+
+    async function processCheckIn(passId) {
+        if (isProcessing) return;
+        isProcessing = true;
+
+        resTitle.innerText = "กำลังตรวจสอบ...";
+        resName.innerText = "";
+        resTime.innerText = "";
+        resultCard.className = "result-card warning";
+        resultCard.style.display = 'block';
+
+        try {
+            const q = query(collection(db, "participants"), where("passId", "==", passId.trim().toUpperCase()));
+            const querySnapshot = await getDocs(q);
+
+            if (querySnapshot.empty) {
+                resTitle.innerText = "❌ ไม่พบข้อมูลบัตรนี้ในระบบ!";
+                resultCard.className = "result-card error";
+            } else {
+                const docSnap = querySnapshot.docs[0];
+                const data = docSnap.data();
+
+                if (data.status === 'checked_in') {
+                    resTitle.innerText = "⚠️ บัตรนี้ถูกสแกนเข้างานไปแล้ว!";
+                    resName.innerText = `คุณ${data.fullname} (${data.email})`;
+                    resTime.innerText = `รหัส: ${data.passId}`;
+                    resultCard.className = "result-card warning";
+                } else {
+                    await updateDoc(doc(db, "participants", docSnap.id), {
+                        status: "checked_in",
+                        checkedInAt: serverTimestamp()
+                    });
+
+                    resTitle.innerText = "✅ ยืนยันเข้างานสำเร็จ!";
+                    resName.innerText = `ยินดีต้อนรับ คุณ${data.fullname}`;
+                    resTime.innerText = `รหัส: ${data.passId}`;
+                    resultCard.className = "result-card success";
+                }
+            }
+        } catch (err) {
+            console.error(err);
+            resTitle.innerText = "เกิดข้อผิดพลาดในการเชื่อมต่อ";
+            resultCard.className = "result-card error";
+        }
+
+        setTimeout(() => { isProcessing = false; }, 3000);
+    }
+
+    // Initialize QR Code Scanner
+    const html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: { width: 220, height: 220 } });
+    html5QrcodeScanner.render((decodedText) => processCheckIn(decodedText));
+
+    document.getElementById('manualBtn').addEventListener('click', () => {
+        const val = document.getElementById('manualPassId').value;
+        if (val) processCheckIn(val);
+    });
+</script>
+</body>
+</html>
