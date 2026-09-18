@@ -96,6 +96,7 @@
         .ticket-name { font-size: 18px; color: #ffffff; font-weight: 600; margin-bottom: 4px; }
         .ticket-email { font-size: 12px; color: #a1a1aa; margin-bottom: 14px; }
         .ticket-status { display: inline-block; background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid #22c55e; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .ticket-notice { font-size: 11px; color: #fbbf24; margin-top: 14px; background: rgba(245, 158, 11, 0.1); padding: 8px; border-radius: 8px; border: 1px solid rgba(245, 158, 11, 0.2); }
         .download-btn { margin-top: 18px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25); }
     </style>
 </head>
@@ -158,7 +159,11 @@
         <div class="ticket-name" id="ticketName">-</div>
         <div class="ticket-email" id="ticketEmail">-</div>
         <div class="ticket-status" id="ticketStatusBadge">✓ REGISTRATION CONFIRMED</div>
-        <p style="font-size: 11px; color: #a1a1aa; margin-top: 14px;">โปรดเซฟรูปภาพนี้ไว้แสดง ณ จุดลงทะเบียน (สแกนด้วยเครื่องของสต๊าฟหน้างาน)</p>
+        
+        <div class="ticket-notice">
+            📌 บันทึกรูปภาพหรือแคปหน้าจอนี้ไว้แสดงต่อเจ้าหน้าที่หน้างาน<br>
+            💡 โปรดเพิ่มความสว่างหน้าจอให้สูงสุดขณะแสดง QR Code
+        </div>
     </div>
 
     <button type="button" id="downloadBtn" class="download-btn" style="display: none;">
@@ -372,5 +377,5 @@
     });
 </script>
 </body>
-                </html>
-                
+    </html>
+    
