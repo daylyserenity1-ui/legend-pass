@@ -109,7 +109,6 @@
         setTimeout(() => { isProcessing = false; }, 3000);
     }
 
-    // Initialize QR Code Scanner
     const html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: { width: 220, height: 220 } });
     html5QrcodeScanner.render((decodedText) => processCheckIn(decodedText));
 
