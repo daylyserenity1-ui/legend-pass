@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <!-- html2canvas สำหรับดาวน์โหลดการ์ดเป็นรูปภาพ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- qrcodejs สำหรับสร้าง QR Code บนบัตร -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kanit', 'Montserrat', sans-serif; }
         
@@ -154,7 +156,7 @@
             align-items: flex-start; 
             gap: 12px; 
             margin-top: 18px; 
-            margin-bottom: 24px; 
+            margin-bottom: 20px; 
             background: rgba(255, 255, 255, 0.02);
             padding: 12px;
             border-radius: 10px;
@@ -209,6 +211,22 @@
             transform: none;
         }
 
+        .find-pass-link {
+            text-align: center;
+            margin-top: 14px;
+            font-size: 12px;
+        }
+
+        .find-pass-link a {
+            color: #ec4899;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .find-pass-link a:hover {
+            text-decoration: underline;
+        }
+
         #statusMessage { 
             margin-top: 16px; 
             text-align: center; 
@@ -242,7 +260,7 @@
             padding: 8px 14px;
             border-radius: 8px;
             display: inline-block;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         .pass-id-text {
             font-family: 'Montserrat', sans-serif;
@@ -252,8 +270,21 @@
             letter-spacing: 2px;
         }
 
+        /* Container QR Code */
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            margin: 12px 0;
+        }
+        #qrcode img {
+            border: 4px solid #fff;
+            border-radius: 8px;
+            padding: 4px;
+            background: #fff;
+        }
+
         .ticket-name { font-size: 18px; color: #ffffff; font-weight: 600; margin-bottom: 4px; }
-        .ticket-email { font-size: 12px; color: #a1a1aa; margin-bottom: 18px; }
+        .ticket-email { font-size: 12px; color: #a1a1aa; margin-bottom: 14px; }
         .ticket-status { display: inline-block; background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid #22c55e; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; }
         
         .download-btn {
@@ -300,6 +331,10 @@
         </div>
 
         <button type="submit" id="submitBtn">ยืนยันรับ LEGEND PASS</button>
+
+        <div class="find-pass-link">
+            <a href="#" id="findPassBtn">เคยลงทะเบียนแล้ว? คลิกที่นี่เพื่อค้นหาบัตรของคุณ</a>
+        </div>
     </form>
 
     <div id="statusMessage"></div>
@@ -315,10 +350,13 @@
             <span class="pass-id-text" id="ticketPassId">TLND-XXXX</span>
         </div>
 
+        <!-- QR Code แสดงบนบัตร -->
+        <div id="qrcode"></div>
+
         <div class="ticket-name" id="ticketName">-</div>
         <div class="ticket-email" id="ticketEmail">-</div>
         <div class="ticket-status">✓ REGISTRATION CONFIRMED</div>
-        <p style="font-size: 11px; color: #71717a; margin-top: 16px;">โปรดบันทึกภาพหน้าจอนี้หรือดาวน์โหลดเพื่อแสดง ณ จุดลงทะเบียนเข้างาน</p>
+        <p style="font-size: 11px; color: #a1a1aa; margin-top: 14px;">โปรดบันทึกภาพหน้าจอนี้ (Screenshot) หรือกดปุ่มดาวน์โหลดรูปภาพ เพื่อแสดง ณ จุดลงทะเบียนเข้างาน</p>
     </div>
 
     <!-- ปุ่มบันทึกบัตรเป็นรูปภาพ -->
@@ -354,6 +392,7 @@
     const quotaText = document.getElementById('quotaText');
     const progressBar = document.getElementById('progressBar');
     const counterBox = document.getElementById('counterBox');
+    const findPassBtn = document.getElementById('findPassBtn');
 
     // ฟังก์ชันสุ่มรหัส Pass ID (เช่น TLND-8F3A)
     function generatePassID() {
@@ -363,6 +402,20 @@
             randomCode += chars.charAt(Math.floor(Math.random() * chars.length));
         }
         return `TLND-${randomCode}`;
+    }
+
+    // ฟังก์ชันสร้าง QR Code
+    function renderQRCode(passId) {
+        const qrContainer = document.getElementById("qrcode");
+        qrContainer.innerHTML = ""; // ล้าง QR Code เก่า
+        new QRCode(qrContainer, {
+            text: passId,
+            width: 110,
+            height: 110,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
     }
 
     // ดึงข้อมูล Real-time จาก Firestore
@@ -392,7 +445,7 @@
         }
 
         const fullname = document.getElementById('fullname').value.trim();
-        const email = document.getElementById('email').value.trim();
+        const email = document.getElementById('email').value.trim().toLowerCase();
         const pdpaAccepted = document.getElementById('pdpa').checked;
 
         submitBtn.disabled = true;
@@ -406,9 +459,8 @@
             const querySnapshot = await getDocs(q);
 
             if (!querySnapshot.empty) {
-                // ถ้าเจออีเมลซ้ำ ให้หยุดทำงานและแจ้งเตือน
                 alert("อีเมลนี้ถูกใช้ลงทะเบียนรับ Legend Pass ไปแล้วครับ!");
-                statusMsg.innerText = "อีเมลนี้ลงทะเบียนไปแล้ว ไม่สามารถลงทะเบียนซ้ำได้";
+                statusMsg.innerText = "อีเมลนี้ลงทะเบียนไปแล้ว สามารถกด 'ค้นหาบัตรของคุณ' ด้านล่างได้เลยครับ";
                 statusMsg.className = "error";
                 statusMsg.style.display = 'block';
                 submitBtn.disabled = false;
@@ -428,12 +480,15 @@
                 createdAt: serverTimestamp()
             });
 
-            // ซ่อนฟอร์มและตัวนับ แล้วแสดงบัตร Pass + ปุ่มดาวน์โหลด
+            // แสดงบัตร Pass + สร้าง QR Code + ปุ่มดาวน์โหลด
             form.style.display = 'none';
             counterBox.style.display = 'none';
             document.getElementById('ticketPassId').innerText = generatedPassId;
             document.getElementById('ticketName').innerText = fullname;
             document.getElementById('ticketEmail').innerText = email;
+            
+            renderQRCode(generatedPassId);
+
             passTicket.style.display = 'block';
             downloadBtn.style.display = 'block';
 
@@ -444,6 +499,56 @@
             statusMsg.style.display = 'block';
             submitBtn.disabled = false;
             submitBtn.innerText = "ยืนยันรับ LEGEND PASS";
+        }
+    });
+
+    // ค้นหาบัตรเดิมกรณีเคยลงทะเบียนแล้ว
+    findPassBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const emailInput = document.getElementById('email').value.trim().toLowerCase();
+
+        if (!emailInput) {
+            alert("กรุณากรอกอีเมลของคุณในช่อง 'อีเมล' แล้วกดปุ่มค้นหาอีกครั้งครับ");
+            document.getElementById('email').focus();
+            return;
+        }
+
+        submitBtn.disabled = true;
+        statusMsg.innerText = "กำลังค้นหาบัตร Pass ของคุณ...";
+        statusMsg.className = "";
+        statusMsg.style.display = 'block';
+
+        try {
+            const participantsRef = collection(db, "participants");
+            const q = query(participantsRef, where("email", "==", emailInput));
+            const querySnapshot = await getDocs(q);
+
+            if (querySnapshot.empty) {
+                alert("ไม่พบข้อมูลการลงทะเบียนด้วยอีเมลนี้ กรุณาตรวจสอบอีเมลอีกครั้ง");
+                statusMsg.style.display = 'none';
+                submitBtn.disabled = false;
+                return;
+            }
+
+            const userData = querySnapshot.docs[0].data();
+
+            form.style.display = 'none';
+            counterBox.style.display = 'none';
+            statusMsg.style.display = 'none';
+
+            document.getElementById('ticketPassId').innerText = userData.passId;
+            document.getElementById('ticketName').innerText = userData.fullname;
+            document.getElementById('ticketEmail').innerText = userData.email;
+
+            renderQRCode(userData.passId);
+
+            passTicket.style.display = 'block';
+            downloadBtn.style.display = 'block';
+
+        } catch (error) {
+            console.error("Find pass error:", error);
+            alert("เกิดข้อผิดพลาดในการค้นหาข้อมูล");
+            submitBtn.disabled = false;
         }
     });
 
@@ -462,17 +567,4 @@
             link.href = canvas.toDataURL('image/png');
             link.click();
 
-            downloadBtn.innerText = "📥 บันทึกรูปภาพบัตรเข้างาน";
-            downloadBtn.disabled = false;
-        }).catch(err => {
-            console.error("Download Error:", err);
-            alert("ไม่สามารถบันทึกรูปภาพได้ กรุณาใช้การแคปหน้าจอแทนครับ");
-            downloadBtn.innerText = "📥 บันทึกรูปภาพบัตรเข้างาน";
-            downloadBtn.disabled = false;
-        });
-    });
-</script>
-
-</body>
-        </html>
-    
+            downloadBtn.inne
