@@ -158,11 +158,10 @@
 
         <div class="ticket-name" id="ticketName">-</div>
         <div class="ticket-email" id="ticketEmail">-</div>
-        <div class="ticket-status" id="ticketStatusBadge">✓ REGISTRATION CONFIRMED</div>
+        <div class="ticket-status" id="ticketStatusBadge">✓ REGISTERED ON-SITE</div>
         
         <div class="ticket-notice">
-            📌 บันทึกรูปภาพหรือแคปหน้าจอนี้ไว้แสดงต่อเจ้าหน้าที่หน้างาน<br>
-            💡 โปรดเพิ่มความสว่างหน้าจอให้สูงสุดขณะแสดง QR Code
+            📌 บันทึกรูปภาพหรือแคปหน้าจอนี้ไว้เพื่อร่วมลุ้น Lucky Draw บนสเตจหลัก
         </div>
     </div>
 
@@ -250,7 +249,7 @@
         const pdpaAccepted = document.getElementById('pdpa').checked;
 
         submitBtn.disabled = true;
-        submitBtn.innerText = "กำลังตรวจสอบสิทธิ์...";
+        submitBtn.innerText = "กำลังสร้าง Legend Pass...";
         statusMsg.style.display = 'none';
 
         try {
@@ -259,8 +258,8 @@
             const querySnapshot = await getDocs(q);
 
             if (!querySnapshot.empty) {
-                alert("อีเมลนี้ถูกใช้ลงทะเบียนรับ Legend Pass ไปแล้วครับ!");
-                statusMsg.innerText = "อีเมลนี้ลงทะเบียนแล้ว ระบบกำลังเปิดบัตรของคุณ...";
+                alert("อีเมลนี้ถูกใช้ลงทะเบียนไปแล้วครับ!");
+                statusMsg.innerText = "ระบบกำลังเปิดบัตรของคุณ...";
                 statusMsg.className = "";
                 statusMsg.style.display = 'block';
 
@@ -269,7 +268,6 @@
                 return;
             }
 
-            submitBtn.innerText = "กำลังสร้าง Legend Pass...";
             const generatedPassId = generatePassID();
 
             await addDoc(collection(db, "participants"), {
@@ -281,7 +279,7 @@
                 createdAt: serverTimestamp()
             });
 
-            showPass({ passId: generatedPassId, fullname: fullname, email: email, status: "registered" });
+            showPass({ passId: generatedPassId, fullname: fullname, email: email });
 
         } catch (error) {
             console.error("Error adding document: ", error);
@@ -301,15 +299,6 @@
         document.getElementById('ticketPassId').innerText = userData.passId;
         document.getElementById('ticketName').innerText = userData.fullname;
         document.getElementById('ticketEmail').innerText = userData.email;
-
-        const badge = document.getElementById('ticketStatusBadge');
-        if(userData.status === 'checked_in') {
-            badge.innerText = "✓ CHECKED-IN (เข้างานแล้ว)";
-            badge.style.borderColor = "#f59e0b";
-            badge.style.color = "#f59e0b";
-        } else {
-            badge.innerText = "✓ REGISTRATION CONFIRMED";
-        }
 
         renderQRCode(userData.passId);
 
@@ -377,5 +366,5 @@
     });
 </script>
 </body>
-    </html>
-    
+            </html>
+            
